@@ -11,9 +11,10 @@ Sistema inteligente de retención estudiantil.
 - **Estándar de Requisitos:** ISO/IEC/IEEE 29148:2018
 
 ## 👥 Equipo
-- **Michael:** Scrum Master & Documentador
-- **Iván:** Analista de Requisitos
-- **Andrés:** Diseñador de Solución
+
+- **Michael:** Scrum Master, Documentador & Backend Developer
+- **Iván:** Analista de Requisitos & Backend Lead
+- **Andrés:** Diseñador de Solución (UI/UX)
 
 ## 📈 Estado del Proyecto
 Actualmente en fase de **Elicitación y Definición de Arquitectura**.

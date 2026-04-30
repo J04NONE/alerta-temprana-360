@@ -38,8 +38,8 @@ Una tarea está "terminada" cuando cumple **todos** los criterios siguientes:
 
 | Integrante | Rol | Horas disponibles | Foco principal |
 | :--- | :--- | :--- | :--- |
-| **Michael** | SM / Documentador | 8h | Coordinación, pruebas de aceptación, documentación de cambios |
-| **Iván** | Analista / Backend | 8h | Django: modelos, APIs, lógica de negocio, RLS |
+| **Michael** | SM / Backend Developer | 8h | Django: lógica de negocio, integración con Supabase, RLS; Coordinación de sprint y pruebas de aceptación |
+| **Iván** | Analista / Backend Lead | 8h | Django: modelos, APIs, esquema BD, arquitectura técnica; Validación de protocolos SED |
 | **Andrés** | Diseñador / Frontend | 8h | HTML/CSS/JS: vistas, formularios, conexión a API |
 | **Total** | | **24h** | |
 
@@ -66,9 +66,36 @@ Una tarea está "terminada" cuando cumple **todos** los criterios siguientes:
 
 ---
 
+### Tareas de Michael — Backend Developer & Lógica de Negocio
+
+| ID Tarea | Descripción | Responsable | Estimación | Estado |
+| :--- | :--- | :--- | :--- | :--- |
+| T-M.1 | **Inicializar proyecto Django:** Crear estructura base con `django-admin startproject at360`, subdirectorio `backend/`, y commit inicial en rama `main` | Michael | 0.5h | ⬜ Por hacer |
+| T-M.2 | **Configurar `.gitignore` y `.env`:** Establecer plantilla de variables de entorno (SECRET_KEY, DATABASE_URL, DEBUG) y commitear `.env.example` | Michael | 0.5h | ⬜ Por hacer |
+| T-M.3 | **Implementación de Modelo de Usuarios extendido:** Crear modelo `Usuario` que extienda Django User con campos `sede_id`, `rol`, `nivel_acceso`, y validaciones de integridad | Michael | 1h | ⬜ Por hacer |
+| T-M.4 | **Validator de Roles y Sedes:** Implementar validaciones custom en el modelo para garantizar que rol y nivel_acceso sean compatibles con el RBAC definido en matriz de actores | Michael | 0.5h | ⬜ Por hacer |
+| T-M.5 | **Pipeline CI/CD — GitHub Actions:** Configurar workflow para ejecutar Linter (Flake8/Black), type checking (mypy) y tests unitarios en cada push a `feature/*` y `main` | Michael | 1h | ⬜ Por hacer |
+| T-M.6 | **Prueba de integridad de RLS:** Validar manualmente que las políticas de Supabase (T-00.3) bloquean acceso cruzado entre `sede_id` | Michael | 0.5h | ⬜ Por hacer |
+
+**Subtotal Michael (Backend):** ~4.5h
+
+---
+
+### Tareas de Iván — Backend Lead & Arquitectura
+
+| ID Tarea | Descripción | Responsable | Estimación | Estado |
+| :--- | :--- | :--- | :--- | :--- |
+| T-IV.1 | **Esquema de Base de Datos para 6 módulos SED:** Diseñar y crear migraciones Django para tablas de alertas por cada módulo (Abuso, Ausentismo, Conducta, Consumo, Salud, Económico) | Iván | 1.5h | ⬜ Por hacer |
+| T-IV.2 | **Lógica de Validación (Checklists):** Codificar funciones Python que implementen los protocolos técnicos del SED (validaciones de patrones de riesgo por módulo) | Iván | 1.5h | ⬜ Por hacer |
+| T-IV.3 | **Integración Supabase + Django ORM:** Configurar connection pooling, manejo de transacciones y rollback automático en caso de fallo de RLS | Iván | 1h | ⬜ Por hacer |
+
+**Subtotal Iván (Backend Lead):** ~4h
+
+---
+
 ### PB-17/18/19 — Infraestructura RBAC + JWT + Celery (5+3+5 SP)
 
-> Ver tareas T-00.3, T-00.4, T-00.5 arriba.
+> Ver tareas T-00.3, T-00.4, T-00.5, T-M.5, T-IV.1 arriba.
 
 ---
 
