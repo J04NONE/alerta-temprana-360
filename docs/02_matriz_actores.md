@@ -10,10 +10,22 @@ Siguiendo el estándar ISO/IEC/IEEE 29148:2018, se definen los actores que inter
 | **Coordinador de Convivencia** | Gestor de casos. Supervisa las alertas de su sede, asigna responsables y escala casos críticos. | **Nivel 3:** Visibilidad completa de alertas en su sede/localidad. Capacidad de edición y escalamiento. |
 | **Administrador de Institución / Rector** | Supervisión estratégica. Consulta métricas agregadas y asegura que se cumplan los protocolos. | **Nivel 4:** Acceso a reportes estadísticos y auditoría. No necesariamente accede al detalle íntimo a menos que el protocolo lo exija. |
 | **Administrador de Sistema (TI)** | Mantenimiento técnico, gestión de roles y auditoría de logs. | **Nivel 5:** Gestión técnica. Acceso a logs de auditoría (quién accedió a qué), pero restringido de ver contenido sensible por RLS. |
+| **Psicólogo / Orientador Escolar** | Stakeholder de Especialidad. Recibe remisiones formales de casos MOD-01 (Abuso) y MOD-03 (Conducta Suicida). Registra seguimientos clínicos y actúa como enlace con la Ruta de Atención Integral (RAI) definida por la Ley 1620 de 2013. | **Nivel 2 Especializado:** Acceso por `caso_id` (remisión explícita), **no** por `grupo_id`. No puede consultar el historial de un NNA sin una remisión activa a su nombre. |
 
 ## Consideraciones de Seguridad y Acceso
-*   **Aislamiento de Datos (RLS):** Los registros de alertas están aislados a nivel de base de datos. Un Docente solo puede consultar filas vinculadas a su `sede_id` o `grupo_id`.
-*   **Mecanismos de Control de Acceso (Gestión de Consentimiento):** 
-    *   **Token de Vinculación Institucional:** Para garantizar el cumplimiento de la Ley 1581 (Habeas Data) sin interoperabilidad con el SIAU, el registro de Padres de Familia utiliza autenticación fuera de banda (*Out-of-band Authentication*). La institución genera un Token Único no reutilizable (OTP) que se entrega físicamente al acudiente verificado. El sistema valida este secreto compartido para establecer la relación `ParentStudent` sin almacenar documentos de identidad sensibles.
-    *   **Trazabilidad:** Cada vinculación genera un log de auditoría inalterable.
-*   **Escalamiento Automático:** Si una alerta de "Conducta Suicida" o "Abuso" no es atendida por un Docente en un tiempo parametrizado, el sistema escala automáticamente la visibilidad al Coordinador.
+
+*   **Aislamiento de Datos (RLS):** Los registros de alertas están aislados a nivel de base de datos. Un Docente solo puede consultar filas vinculadas a su `sede_id` o `grupo_id`. El Psicólogo/Orientador accede únicamente por `caso_id` de remisión.
+
+*   **Ciclo de Vida de Vinculación (Ley 1581 — Privilegios Residuales):**
+    La relación `TeacherCourse` incluye los campos `valid_until` (fecha de vigencia del vínculo) y `last_verified_at` (última confirmación activa del Docente). Si `last_verified_at` supera 15 días sin renovación, el RLS bloquea preventivamente el acceso del Docente a los detalles sensibles de las alertas hasta que realice la Confirmación Activa (RF-11).
+    *   **UI de Semáforo:** El dashboard del Docente clasifica su lista de estudiantes en: 🟢 verde (sin cambios), 🟡 amarillo (novedad detectada en carga Delta-CSV) y 🔴 rojo (validación vencida — acceso bloqueado).
+    *   **Principio Fail-Safe:** Si el periodo académico cambia sin nueva carga CSV, el acceso a detalles sensibles se restringe por defecto.
+
+*   **Token de Vinculación Institucional (Padre de Familia):**
+    Para cumplir la Ley 1581 sin interoperabilidad con el SIAU, el registro de Padres usa autenticación fuera de banda (*Out-of-band*). La institución genera un Token OTP no reutilizable (vigencia 72h) entregado físicamente al acudiente verificado. El sistema establece la relación `ParentStudent` sin almacenar documentos de identidad sensibles. Cada vinculación genera un log de auditoría inalterable.
+
+*   **Escalamiento Automático y Escalamiento por Abandono:**
+    Si una alerta crítica (MOD-01, MOD-03) no es atendida en 24h, escala al Coordinador. Si ningún actor acepta el Hand-off de un caso activo en 48h tras ser transferido, el sistema genera una alerta de **"Riesgo de Ruptura de Ruta"** al Rector/Administrador de Institución.
+
+*   **Estado de Remisión en el flujo de alerta:**
+    Las alertas pueden transitar al estado `Remitido a Orientación` cuando el Coordinador asigna el caso al Psicólogo/Orientador. Este estado es visible para el Docente original y para el Rector.

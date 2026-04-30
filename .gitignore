@@ -1,3 +1,13 @@
+# Archivos de contexto interno — nunca al repositorio público
+.git/contexto.md
+contexto.md
+
+# Archivos de planificación Claude Code (sesión local)
+task_plan.md
+findings.md
+progress.md
+ManualSkills.md
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
