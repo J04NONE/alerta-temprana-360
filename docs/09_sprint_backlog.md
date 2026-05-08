@@ -55,7 +55,7 @@ Una tarea está "terminada" cuando cumple **todos** los criterios siguientes:
 
 | ID Tarea | Descripción | Responsable | Estimación | Estado |
 | :--- | :--- | :--- | :--- | :--- |
-| T-00.1 | Configurar proyecto Django 5.x con estructura de apps: `usuarios`, `alertas`, `seguimiento`, `datos` | Iván | 1h | ⬜ Por hacer |
+| T-00.1 | Configurar proyecto Django 6.0 con estructura de apps: `usuarios`, `alertas`, `seguimiento`, `datos` | Iván | 1h | ⬜ Por hacer |
 | T-00.2 | Conectar Django a Supabase/PostgreSQL (`.env` con DATABASE_URL) | Iván | 0.5h | ⬜ Por hacer |
 | T-00.3 | Configurar políticas RLS en Supabase: aislamiento por `sede_id`, `grupo_id`, `caso_id` | Iván | 1.5h | ⬜ Por hacer |
 | T-00.4 | Configurar JWT con django-rest-framework-simplejwt + tabla de token blacklist | Iván | 1h | ⬜ Por hacer |
