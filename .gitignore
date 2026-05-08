@@ -1,7 +1,7 @@
 # Archivos de contexto interno — nunca al repositorio público
 .git/contexto.md
 contexto.md
-
+T01_APPROVAL_SPEC.md
 # Archivos de planificación Claude Code (sesión local)
 task_plan.md
 findings.md
