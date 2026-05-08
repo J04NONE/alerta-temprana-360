@@ -111,6 +111,7 @@
 ## Definición de "Listo para Sprint" (Definition of Ready)
 
 Un ítem del Product Backlog está listo para entrar al Sprint cuando:
+
 - [ ] La HU tiene al menos 2 criterios de aceptación en Gherkin
 - [ ] El RF asociado tiene especificación completa en `05_especificacion_requisitos.md`
 - [ ] Las dependencias del backlog están identificadas
