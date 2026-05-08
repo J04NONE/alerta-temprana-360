@@ -22,6 +22,7 @@ actor "Rector /\nAdministrador" as RECT
 actor "Psicólogo /\nOrientador" as PSI
 actor "Administrador\nde Sistema (TI)" as TI
 actor "Admin\nInstitución" as ADMIN
+actor "Sistema\n(automático)" as SIS
 
 rectangle "Alerta Temprana 360" {
 
@@ -46,10 +47,10 @@ rectangle "Alerta Temprana 360" {
     usecase "Ejecutar Hand-off\nde caso" as UC12
   }
 
-  package "Datos Académicos" {
+  package "Ingesta de Datos y Triage Automático" {
     usecase "Cargar CSV completo\nde datos académicos" as UC13
     usecase "Cargar Delta-CSV\n(novedades de matrícula)" as UC14
-    usecase "Detectar riesgo\nacadémico automático" as UC15
+    usecase "Detectar indicadores\nindirectos (MOD-06)" as UC15
   }
 
   package "Dashboard y Reportes" {
@@ -98,6 +99,10 @@ ADMIN --> UC14
 ' Asociaciones TI
 TI --> UC01
 
+' Asociaciones Sistema (actor automático)
+SIS --> UC11
+SIS --> UC15
+
 ' Include/Extend
 UC05 ..> UC06 : <<include>>
 UC06 ..> UC07 : <<include>>
@@ -106,6 +111,7 @@ UC08 ..> UC09 : <<extend>>
 UC11 ..> UC20 : <<include>>
 UC13 ..> UC15 : <<include>>
 UC14 ..> UC15 : <<include>>
+UC15 ..> UC05 : <<include>>
 UC16 ..> UC17 : <<extend>>
 
 ' Notificaciones recibidas

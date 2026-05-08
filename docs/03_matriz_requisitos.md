@@ -8,7 +8,7 @@ Este documento especifica los requisitos funcionales, no funcionales y las restr
 | :--- | :--- | :--- | :--- |
 | **RF-01** | Gestión de Usuarios y Roles | El sistema debe permitir el registro y autenticación de usuarios (Docente, Estudiante, Padre, Coordinador) con control de acceso basado en roles (RBAC). | Alta |
 | **RF-02** | Registro de Alertas SED | El sistema debe permitir reportar incidentes en 6 módulos específicos: Abuso, Accidentalidad, Conducta Suicida, SPA, Maternidad Temprana y Trastornos de Aprendizaje. | Alta |
-| **RF-03** | Detección de Riesgo Académico | El sistema debe identificar automáticamente estudiantes con 3+ matrículas en una materia o notas de 0.0 (basado en carga masiva). | Media |
+| **RF-03** | Motor de Detección de Indicadores Indirectos | El sistema debe procesar automáticamente los datos de la carga masiva (RF-06) e identificar indicadores indirectos de riesgo de convivencia (3+ matrículas en la misma asignatura, nota 0.0 confirmada), generando alertas en el módulo **MOD-06 (Trastornos de Aprendizaje y Comportamiento)** que siguen el mismo flujo de atención que las alertas manuales (RF-02). | Media |
 | **RF-04** | Notificaciones en Tiempo Real | El sistema debe enviar alertas automáticas (Email/App) a los actores responsables inmediatamente después de activarse un indicador de riesgo crítico. | Alta |
 | **RF-05** | Registro de Seguimiento | Permite a los docentes y coordinadores registrar cada intervención realizada sobre un caso activo (bitácora de seguimiento). | Alta |
 | **RF-06** | Carga Masiva de Datos | Permite a los administradores importar archivos CSV/Excel con datos académicos y demográficos, validando la integridad antes de procesar. | Alta |

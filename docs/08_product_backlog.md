@@ -46,11 +46,11 @@
 
 ---
 
-## Épica 3 — Datos Académicos
+## Épica 3 — Ingesta de Datos y Triage Automático
 
 | ID | Historia de Usuario | MoSCoW | SP | Sprint | RF | Dependencias |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| PB-12 | **HU-12** Carga masiva CSV completo | Must Have | 5 | Sprint 1 | RF-06 | PB-01 |
+| PB-12 | **HU-12** Carga masiva CSV — Triage Automático (MOD-06) | Must Have | 5 | Sprint 1 | RF-06, RF-03 | PB-01 |
 | PB-13 | **HU-13** Delta-CSV incremental (novedades de matrícula) | Should Have | 5 | Sprint 2 | RF-06, RF-11 | PB-12, PB-04 |
 
 **Total Épica 3:** 10 SP · Must Have: 5 SP · Should Have: 5 SP

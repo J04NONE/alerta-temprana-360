@@ -145,59 +145,64 @@ Escenario 3: Visibilidad restringida por RLS
 
 ---
 
-## RF-03 — Detección de Riesgo Académico
+## RF-03 — Motor de Detección de Indicadores Indirectos
 
 | Campo | Detalle |
 | :--- | :--- |
 | **Código** | RF-03 |
-| **Nombre** | Detección Automática de Riesgo Académico |
+| **Nombre** | Motor de Detección de Indicadores Indirectos de Riesgo de Convivencia |
 | **Tipo** | Funcional |
 | **Prioridad** | Media |
-| **Actor(es)** | Administrador de Institución (carga datos), Sistema (procesamiento automático), Docente (receptor de alerta) |
+| **Actor(es)** | Administrador de Institución (carga datos), Sistema (procesamiento automático), Docente (receptor de alerta MOD-06) |
 
-**Descripción:**  
-El sistema debe procesar automáticamente los datos académicos cargados vía archivo (ver RF-06) e identificar estudiantes en condición de riesgo académico bajo dos indicadores: (a) tres o más matrículas registradas en una misma materia, y (b) presencia de nota 0.0 confirmada en el semestre activo, diferenciando este caso de una nota aún no registrada por el docente.
+**Descripción:**
+El sistema debe procesar automáticamente los datos académicos cargados vía archivo (ver RF-06) e identificar indicadores indirectos de riesgo de convivencia bajo dos señales: (a) tres o más matrículas registradas en la misma asignatura, y (b) presencia de nota 0.0 confirmada en el semestre activo, diferenciándola de una nota aún no registrada. Al detectar cualquiera de estas señales, el sistema genera automáticamente una alerta en el módulo **MOD-06 — Trastornos de Aprendizaje y Comportamiento**, que sigue el mismo flujo de atención, notificación y escalamiento que una alerta registrada manualmente por un Docente (RF-02).
 
 **Precondición:**
-- Los datos académicos del semestre activo han sido cargados exitosamente mediante RF-06.
-- El semestre activo está configurado en el sistema con fecha de inicio y fin.
+
+* Los datos académicos del semestre activo han sido cargados exitosamente mediante RF-06.
+* El semestre activo está configurado en el sistema con fecha de inicio y fin.
 
 **Postcondición:**
-- Los estudiantes que cumplen algún indicador aparecen en el panel del Docente y del Coordinador con la etiqueta de riesgo correspondiente.
-- Se activa el flujo de notificación (RF-04) para cada alerta generada.
-- La detección queda registrada con: indicador activado, fecha de detección, semestre de referencia.
+
+* Se genera una alerta MOD-06 para cada estudiante con indicadores detectados, visible en el panel del Docente responsable y del Coordinador de Convivencia.
+* Se activa el flujo de notificación (RF-04) con la misma prioridad que una alerta MOD-06 manual.
+* La detección queda registrada con: indicador activado, fecha de detección, semestre de referencia.
 
 **Criterios de aceptación:**
 
 ```gherkin
-Escenario 1: Detección por matrículas reiteradas
+Escenario 1: Generación de alerta MOD-06 por matrículas reiteradas
   Dado que los datos cargados incluyen a un estudiante
     con 3 registros de matrícula para "Cálculo Diferencial"
   Cuando el sistema procesa el archivo de carga
-  Entonces genera una alerta de tipo "Riesgo Académico — Matrículas" para ese estudiante
-  Y la alerta es visible en el panel del Docente de Cálculo Diferencial
-    en menos de 1 minuto desde la finalización de la carga
+  Entonces genera una alerta MOD-06 "Trastornos de Aprendizaje y Comportamiento"
+    vinculada al indicador "Matrícula reiterada — Cálculo Diferencial"
+  Y la alerta aparece en el panel del Docente responsable en menos de 1 minuto
+  Y el sistema notifica al Docente con la misma prioridad que una alerta MOD-06 manual
 
 Escenario 2: Distinción entre nota no subida y nota cero confirmada
   Dado que el archivo cargado contiene dos estudiantes:
     - Estudiante A: nota "0.0" registrada formalmente en el sistema de notas
     - Estudiante B: casilla de nota vacía (docente no ha subido nota)
   Cuando el sistema procesa el archivo
-  Entonces el Estudiante A recibe etiqueta "Nota Cero Confirmada"
-  Y el Estudiante B recibe etiqueta "Nota Pendiente de Registro"
-  Y ambas etiquetas son visualmente distintas en el dashboard
+  Entonces el Estudiante A genera alerta MOD-06 vinculada al indicador "Nota Cero Confirmada"
+  Y el Estudiante B recibe etiqueta "Nota Pendiente de Registro" — sin generar alerta MOD-06
+  Y ambas etiquetas son visualmente distintas en el dashboard del Docente
 
-Escenario 3: No generación de duplicados
-  Dado que una alerta de "Riesgo Académico — Matrículas" ya existe para un estudiante
-  Cuando se carga un nuevo archivo con los mismos datos
-  Entonces el sistema no genera una segunda alerta duplicada
-  Y actualiza la alerta existente con la fecha de última confirmación
+Escenario 3: No generación de alertas MOD-06 duplicadas
+  Dado que ya existe una alerta MOD-06 activa por indicador "Matrícula reiterada" para un estudiante
+  Cuando se carga un nuevo archivo con los mismos datos académicos
+  Entonces el sistema no genera una segunda alerta MOD-06 duplicada
+  Y actualiza la alerta existente con la fecha de última confirmación del indicador
 ```
 
 **Reglas de negocio:**
-- RB-10: El umbral de "matrícula reiterada" es de 3 o más registros en la misma asignatura. Este valor es configurable por el Administrador de Institución sin requerir cambios en el código.
-- RB-11: La definición de "nota cero confirmada" requiere que el campo de calificación contenga el valor numérico `0.0` explícito en el archivo importado. Un campo vacío no es equivalente a nota cero.
-- RB-12: La detección de riesgo académico no opera en tiempo real; se ejecuta como proceso batch inmediatamente después de cada carga masiva de datos.
+
+* RB-10: El umbral de "matrícula reiterada" es de 3 o más registros en la misma asignatura. Este valor es configurable por el Administrador de Institución sin requerir cambios en el código.
+* RB-11: La definición de "nota cero confirmada" requiere que el campo de calificación contenga el valor numérico `0.0` explícito en el archivo importado. Un campo vacío no es equivalente a nota cero.
+* RB-12: La detección de indicadores indirectos no opera en tiempo real; se ejecuta como proceso batch inmediatamente después de cada carga masiva de datos (RF-06).
+* RB-12b: Las alertas MOD-06 generadas automáticamente por el motor de indicadores indirectos son funcionalmente idénticas a las alertas MOD-06 registradas manualmente por un Docente — siguen el mismo flujo de notificación (RF-04), escalamiento automático (RF-07) y bitácora de seguimiento (RF-05).
 
 ---
 
@@ -465,7 +470,7 @@ Escenario 1: Consulta completa por el Coordinador
   Dado que el Coordinador de Convivencia selecciona a un estudiante de su sede
   Cuando accede a la vista de "Historial 360"
   Entonces visualiza: todas las alertas históricas (activas y cerradas),
-    todos los registros de seguimiento, el riesgo académico detectado
+    todos los registros de seguimiento, los indicadores indirectos detectados (RF-03)
     y el estado actual del caso, ordenados cronológicamente
   Y el sistema registra en auditoría el acceso completo
 

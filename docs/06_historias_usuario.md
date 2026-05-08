@@ -393,27 +393,31 @@ Entonces el sistema genera una alerta de "Riesgo de Ruptura de Ruta" al Rector
 
 ---
 
-## Épica 4 — Datos Académicos
+## Épica 4 — Ingesta de Datos y Triage Automático
 
 ---
 
-### HU-12 | Carga Masiva de Datos Académicos (CSV completo)
+### HU-12 | Carga Masiva de Datos para Triage Automático (CSV completo)
 
-**Como** Administrador de Institución,  
-**quiero** importar el archivo CSV completo con los datos académicos del semestre,  
-**para** que el sistema detecte automáticamente los estudiantes en riesgo académico sin requerir integración directa con el SIAU.
+**Como** Administrador de Institución,
+**quiero** importar el archivo CSV completo con los datos académicos del semestre,
+**para** que el sistema identifique automáticamente los estudiantes que requieren intervención del orientador por cambios bruscos en su desempeño, generando alertas MOD-06 sin requerir integración directa con el SIAU.
 
 **Criterios de aceptación:**
+
 ```gherkin
 Dado que el Administrador sube un CSV válido con 500 filas
 Cuando el sistema completa la validación sin errores
-Entonces importa los 500 registros y confirma: "500 estudiantes importados. Procesando detección de riesgo..."
-Y activa el motor de detección de RF-03 automáticamente
+Entonces importa los 500 registros y confirma:
+  "500 estudiantes importados. Ejecutando triage automático de indicadores de riesgo..."
+Y activa el Motor de Detección de Indicadores Indirectos (RF-03) automáticamente
+Y las alertas MOD-06 generadas aparecen en el panel de los Docentes responsables
 
 Dado que el archivo tiene errores en 2 filas
 Cuando el sistema finaliza la validación
 Entonces rechaza toda la carga y genera reporte descargable con fila, columna y descripción del error
 Y ninguna fila se importa (transacción atómica)
+Y no se generan alertas MOD-06 parciales
 ```
 
 | Campo | Valor |
@@ -421,7 +425,7 @@ Y ninguna fila se importa (transacción atómica)
 | **Story Points** | 5 |
 | **Prioridad** | Must Have |
 | **Sprint** | Sprint 1 |
-| **RF relacionado** | RF-06 |
+| **RF relacionado** | RF-06, RF-03 |
 
 ---
 
@@ -469,7 +473,7 @@ Y genera notificación al Coordinador: "Estudiante con alerta activa registrado 
 Dado que el Coordinador selecciona a un estudiante de su sede
 Cuando accede a la vista "Historial 360"
 Entonces visualiza: todas las alertas (activas y cerradas), todos los seguimientos
-  y el estado de riesgo académico, ordenados cronológicamente
+  y los indicadores indirectos detectados (RF-03), ordenados cronológicamente
 Y el sistema genera log de auditoría del acceso
 
 Dado que el Coordinador selecciona "Exportar a PDF"
@@ -508,8 +512,8 @@ Y NO ve la descripción detallada de incidentes ni los comentarios de seguimient
 | HU-09 | Bitácora de Seguimiento | Seguimiento | 3 | Must Have | Sprint 1 | RF-05 |
 | HU-10 | Escalamiento Automático | Seguimiento | 5 | Must Have | Sprint 1 | RF-07 |
 | HU-11 | Hand-off de Caso | Seguimiento | 5 | Should Have | Sprint 2 | RF-09 |
-| HU-12 | Carga Masiva CSV | Datos Académicos | 5 | Must Have | Sprint 1 | RF-06 |
-| HU-13 | Delta-CSV Incremental | Datos Académicos | 5 | Should Have | Sprint 2 | RF-06, RF-11 |
+| HU-12 | Carga Masiva — Triage Automático | Ingesta y Triage | 5 | Must Have | Sprint 1 | RF-06, RF-03 |
+| HU-13 | Delta-CSV Incremental | Ingesta y Triage | 5 | Should Have | Sprint 2 | RF-06, RF-11 |
 | HU-14 | Historial 360 | Dashboard | 5 | Must Have | Sprint 1 | RF-08 |
 | **Total** | | | **65 SP** | | | |
 
