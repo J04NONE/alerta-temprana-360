@@ -68,3 +68,4 @@ Ver `docs/04_estrategia_tecnica.md` §4 y §5 para detalle.
 ## Estado del Proyecto
 
 Actualmente en fase de **Definición de Arquitectura e Ingeniería de Requisitos** (Django 6.0 · Hexagonal · CQRS).
+ENLACE DOCUMENTO SRS https://docs.google.com/document/d/1vA7dhH7DXTi_d-0v0jr2t79DAMseHCNJI1yWbMZgWl0/edit?usp=sharing
